@@ -162,3 +162,35 @@ EXCEPTION
     WHEN OTHERS
         THEN RAISE_APPLICATION_ERROR(-20007, sqlerrm);
 END signin_procedure;
+
+------------------------ [ADD MONEY] ------------------------------------
+CREATE OR REPLACE PROCEDURE add_money_procedure
+    (
+    p_id    INT,
+    p_value INT
+    )
+IS
+    NULL_PARAMETER EXCEPTION;
+    user_found NUMBER;
+begin
+    UPDATE Users
+    SET account = account + p_value
+    WHERE id = p_id;
+
+    IF(p_id IS NULL OR p_value IS NULL)
+    THEN RAISE NULL_PARAMETER;
+    END IF;
+
+    IF(user_found != 1)
+        THEN RAISE NO_DATA_FOUND;
+    END IF;
+
+EXCEPTION
+    WHEN NULL_PARAMETER
+        THEN RAISE_APPLICATION_ERROR(-20005, 'Some parameters cannot be null!');
+    WHEN NO_DATA_FOUND
+        THEN RAISE_APPLICATION_ERROR(-20003, 'Cannot find user!');
+    WHEN OTHERS
+        THEN RAISE_APPLICATION_ERROR(-20007, sqlerrm);
+end;
+/
