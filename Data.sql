@@ -1,16 +1,18 @@
 ALTER SESSION SET NLS_LANGUAGE= 'american';
 
 ---------------------- [ROLES] ----------------------
-INSERT INTO roles(role_name)
+INSERT INTO roles(roleName)
 VALUES ('admin');
-INSERT INTO roles(role_name)
+INSERT INTO roles(roleName)
 VALUES ('seller');
-INSERT INTO roles(role_name)
+INSERT INTO roles(roleName)
 VALUES ('buyer');
 
 SELECT * FROM roles;
 
 ---------------------- [USERS] ----------------------
+INSERT INTO users(id, username, password, email, role_id)
+VALUES (0,'default user', '1111', 'default@gmail.com', 3);
 INSERT INTO users(username, password, email, role_id)
 VALUES ('admin', 'admin', 'admin@gmail.com', 1);
 INSERT INTO users(username, password, email, role_id)
@@ -22,6 +24,7 @@ VALUES ('sanya', '1111', 'sanya@gmail.com', 3);
 INSERT INTO users(username, password, email, role_id)
 VALUES ('max', '1111', 'max@gmail.com', 3);
 
+DELETE FROM users WHERE username = 'default user';
 SELECT * FROM users;
 
 ---------------------- [ITEMS] ----------------------
@@ -66,8 +69,6 @@ SELECT * FROM auction;
 
 ---------------------- [AUCTIONTYPE] ----------------------
 INSERT INTO auctiontype(title)
-VALUES ('English');
+VALUES ('Open');
 INSERT INTO auctiontype(title)
-VALUES ('Dutch');
-INSERT INTO auctiontype(title)
-VALUES ('Vickrey');
+VALUES ('Close');

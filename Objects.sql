@@ -3,20 +3,14 @@ CREATE OR REPLACE TRIGGER notify_rate_increase
     FOR UPDATE OF winnerprice
     ON Item
     COMPOUND TRIGGER
-    message varchar2(1000);
+    message_ varchar2(1000);
 BEFORE EACH ROW IS
 BEGIN
     IF :OLD.winnerprice < :NEW.winnerprice THEN
-        message := 'The price of item ' || :NEW.id || ' has increased to ' || :NEW.winnerprice;
-        DBMS_ALERT.SIGNAL('rate_increase', message);
+        message_ := 'The price of item ' || :NEW.id || ' has increased to ' || :NEW.winnerprice;
+        INSERT INTO Notifications(operation_date, message, user_id, is_read) VALUES (SYSDATE, message_, :NEW.BUYERID, 0);
     END IF;
 END BEFORE EACH ROW;
-    AFTER STATEMENT IS
-BEGIN
-        IF message IS NOT NULL THEN
-            INSERT INTO NOTIFICATIONS(message) VALUES (message);
-        END IF;
-END AFTER STATEMENT;
 END notify_rate_increase;
 
 ------------------------------------- [view] -------------------------------------
@@ -33,3 +27,13 @@ FROM Item
         ON items_category.categoryid = category.id;
 
 select * from item_category_view;
+
+DROP VIEW item_category_view;
+
+------------------------------------- [indexes] -------------------------------------
+create index title_and_description_item on Item(Title, Description);
+create index items_category_ItemId on ItemsCategory(itemid);
+create index items_category_categoryId on ItemsCategory(categoryId);
+
+
+SELECT *
